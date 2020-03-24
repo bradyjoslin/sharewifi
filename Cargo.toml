@@ -1,0 +1,10 @@
+[package]
+name = "macos-wifi-password"
+version = "0.1.0"
+authors = ["Joslin, Brady W (Brady) <brady@bradyjoslin.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+structopt = "0.3"
