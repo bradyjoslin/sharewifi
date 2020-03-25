@@ -1,27 +1,24 @@
 use std::process::Command;
 use structopt::StructOpt;
 
-/// Uses MacOS airport and keychain CLI tools to obtain the Wi-Fi passwords.
-#[derive(StructOpt, Debug)]
-#[structopt(name = "macos wifi password")]
-struct Opt {
-    /// Specify an SSID.  Defaults to currently connected Wi-Fi.
-    #[structopt(short, long)]
-    ssid: Option<String>,
-}
+mod app;
+mod errors;
 
-fn main() {
-    let opt = Opt::from_args();
-    let ssid = match opt.ssid {
+use errors::{AppResult, Error};
+
+fn main() -> AppResult<()> {
+    let app = app::App::from_args();
+    let ssid = match app.ssid {
         Some(ssid_in) => ssid_in.to_owned(),
-        None => connected_ssid(),
+        None => connected_ssid()?,
     };
-    let password = password_from_keychain(ssid);
+    let password = password_from_keychain(ssid)?;
 
     println!("{}", password);
+    Ok(())
 }
 
-fn connected_ssid() -> String {
+fn connected_ssid() -> AppResult<String> {
     let airport_path =
         "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport";
     let output = Command::new(airport_path)
@@ -29,33 +26,51 @@ fn connected_ssid() -> String {
         .output()
         .expect("Airport not found");
     let airport_info = String::from_utf8(output.stdout).expect("Not UTF-8");
-    airport_info
+    let result = airport_info
         .lines()
         .filter(|x| x.contains("SSID"))
         .last()
-        .expect("SSID not found")
+        .unwrap_or_default()
         .split("SSID:")
         .last()
-        .expect("SSID not found")
+        .unwrap_or_default()
         .trim()
-        .to_owned()
+        .to_owned();
+    match result.as_str() {
+        "" => Err(Error::SSIDMissing),
+        _ => Ok(result),
+    }
 }
 
-fn password_from_keychain(ssid: String) -> String {
+fn password_from_keychain(ssid: String) -> AppResult<String> {
     let output = Command::new("security")
         .arg("find-generic-password")
         .args(&["-D", "AirPort network password"])
         .args(&["-ga", &ssid])
-        .output()
-        .expect("process failed to execute");
-    let password_raw = String::from_utf8(output.stderr).expect("Not UTF-8");
-    password_raw
-        .lines()
-        .last()
-        .expect("Password not found")
-        .split("password:")
-        .last()
-        .expect("Password not found")
-        .trim()
-        .replace("\"", "")
+        .output();
+    match output {
+        Ok(s) => {
+            if s.status.code().unwrap() == 44 {
+                Err(Error::SSIDNotFound)
+            } else if s.status.code().unwrap() != 0 {
+                Err(Error::KeychainAccess)
+            } else {
+                let keychain_info = String::from_utf8(s.stderr).expect("Not UTF-8");
+                let password = keychain_info
+                    .lines()
+                    .last()
+                    .unwrap_or_default()
+                    .split("password:")
+                    .last()
+                    .unwrap_or_default()
+                    .trim()
+                    .replace("\"", "");
+                match password.as_str() {
+                    "" => Err(Error::PasswordNotFound),
+                    _ => Ok(password),
+                }
+            }
+        }
+        Err(e) => panic!(e),
+    }
 }
