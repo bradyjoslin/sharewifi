@@ -26,7 +26,7 @@ fn connected_ssid() -> AppResult<String> {
         .output()
         .expect("Airport not found");
     let airport_info = String::from_utf8(output.stdout).expect("Not UTF-8");
-    let result = airport_info
+    let ssid = airport_info
         .lines()
         .filter(|x| x.contains("SSID"))
         .last()
@@ -36,9 +36,9 @@ fn connected_ssid() -> AppResult<String> {
         .unwrap_or_default()
         .trim()
         .to_owned();
-    match result.as_str() {
+    match ssid.as_str() {
         "" => Err(Error::SSIDMissing),
-        _ => Ok(result),
+        _ => Ok(ssid),
     }
 }
 
@@ -49,13 +49,9 @@ fn password_from_keychain(ssid: String) -> AppResult<String> {
         .args(&["-ga", &ssid])
         .output();
     match output {
-        Ok(s) => {
-            if s.status.code().unwrap() == 44 {
-                Err(Error::SSIDNotFound)
-            } else if s.status.code().unwrap() != 0 {
-                Err(Error::KeychainAccess)
-            } else {
-                let keychain_info = String::from_utf8(s.stderr).expect("Not UTF-8");
+        Ok(o) => match o.status.code().unwrap() {
+            0 => {
+                let keychain_info = String::from_utf8(o.stderr).expect("Not UTF-8");
                 let password = keychain_info
                     .lines()
                     .last()
@@ -70,7 +66,9 @@ fn password_from_keychain(ssid: String) -> AppResult<String> {
                     _ => Ok(password),
                 }
             }
-        }
+            44 => Err(Error::SSIDNotFound),
+            _ => Err(Error::KeychainAccess),
+        },
         Err(e) => panic!(e),
     }
 }
