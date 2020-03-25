@@ -1,4 +1,4 @@
-# MacOS Wi-Fi Password
+# Wi-Fi Password
 
 ```
 Wi-Fi Password 0.1.0
