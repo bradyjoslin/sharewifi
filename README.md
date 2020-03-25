@@ -9,7 +9,7 @@ USAGE:
 
 FLAGS:
     -h, --help       Prints help information
-    -q, --qrcode     Wi-Fi Network config QR Code for Android and iOS 11+
+    -q, --qrcode     Prints Wi-Fi Network config QR Code for Android and iOS 11+
     -V, --version    Prints version information
     -v, --verbose    Verbose output
 

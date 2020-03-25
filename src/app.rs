@@ -8,7 +8,7 @@ pub struct App {
     #[structopt(short, long)]
     pub ssid: Option<String>,
 
-    /// Wi-Fi Network config QR Code for Android and iOS 11+
+    /// Prints Wi-Fi Network config QR Code for Android and iOS 11+
     #[structopt(short, long)]
     pub qrcode: bool,
 
