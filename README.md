@@ -1,4 +1,4 @@
-# MacOS Wi-Fi Password
+# Wi-Fi Password
 
 ```
 CLI tool to obtain Wi-Fi password on MacOS. 
