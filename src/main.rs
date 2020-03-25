@@ -1,3 +1,5 @@
+use qrcode::render::unicode;
+use qrcode::QrCode;
 use std::process::Command;
 use structopt::StructOpt;
 
@@ -12,9 +14,17 @@ fn main() -> AppResult<()> {
         Some(ssid_in) => ssid_in.to_owned(),
         None => connected_ssid()?,
     };
-    let password = password_from_keychain(ssid)?;
+    let password = password_from_keychain(&ssid)?;
 
-    println!("{}", password);
+    if app.verbose {
+        println!("SSID: {}\nPassword: {}", ssid, password);
+    } else if app.qrcode {
+        let image = qrcode(&ssid, &password);
+        println!("{}", image);
+    } else {
+        println!("{}", password);
+    }
+
     Ok(())
 }
 
@@ -42,11 +52,11 @@ fn connected_ssid() -> AppResult<String> {
     }
 }
 
-fn password_from_keychain(ssid: String) -> AppResult<String> {
+fn password_from_keychain(ssid: &str) -> AppResult<String> {
     let output = Command::new("security")
         .arg("find-generic-password")
         .args(&["-D", "AirPort network password"])
-        .args(&["-ga", &ssid])
+        .args(&["-ga", ssid])
         .output();
     match output {
         Ok(o) => match o.status.code().unwrap() {
@@ -71,4 +81,12 @@ fn password_from_keychain(ssid: String) -> AppResult<String> {
         },
         Err(e) => panic!(e),
     }
+}
+
+fn qrcode(ssid: &str, password: &str) -> String {
+    let code = QrCode::new(format!("WIFI:T:WPA;S:{};P:{};;", &ssid, &password)).unwrap();
+    code.render::<unicode::Dense1x2>()
+        .dark_color(unicode::Dense1x2::Light)
+        .light_color(unicode::Dense1x2::Dark)
+        .build()
 }
