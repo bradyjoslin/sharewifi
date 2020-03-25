@@ -19,4 +19,4 @@ OPTIONS:
     -s, --ssid <ssid>    Specify an SSID.  Defaults to currently connected Wi-Fi
 ```
 
-Inspired by [https://github.com/rauchg/wifi-password](https://github.com/rauchg/wifi-password).
+Inspired by [rauchg/wifi-password](https://github.com/rauchg/wifi-password).
