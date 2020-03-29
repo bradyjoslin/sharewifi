@@ -1,6 +1,20 @@
 # Wi-Fi Password
 
-```
+Quickly share Wi-Fi passwords and connection details, including QR codes that auto-configure iOS and Android devices.
+
+Uses two built-in MacOS CLI utilities to function. `airport` gets information on currently connected Wi-Fi, `security` is used to obtain password. Running `security` provides a login prompt to access keychain, as authentication is required in order to obtain the password ([more](#behind-the-scenes)).
+
+Sample usage:
+
+![screenshot](./screenshot.png)
+
+Google Lens displaying QR Code details along with button to join network with single tap:
+
+![google lens](./googlelens.png)
+
+CLI help output:
+
+```bash
 Wi-Fi Password 0.1.0
 Uses MacOS airport and keychain CLI tools to obtain the Wi-Fi passwords
 
@@ -17,4 +31,59 @@ OPTIONS:
     -s, --ssid <ssid>    Specify an SSID.  Defaults to currently connected Wi-Fi
 ```
 
-Inspired by [rauchg/wifi-password](https://github.com/rauchg/wifi-password).
+## Building and Installing
+
+Building and installing requires [Rust](https://www.rust-lang.org/tools/install). To build, clone the repository and then:
+
+```bash
+cargo build
+```
+
+To run the debug build:
+
+```bash
+cargo run
+```
+
+To create a release build:
+
+```bash
+cargo build --release
+```
+
+To install:
+
+```bash
+cargo install --path .
+```
+
+## Behind the Scenes
+
+Further explanation of how this works.
+
+Default MacOS `airport` utility location:
+
+`/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport`.
+
+Sample usage to obtain SSID:
+
+```bash
+> airport -I | awk '/ SSID/ {print substr($0, index($0, $2))}'
+
+Guest WiFi
+```
+
+Uses `security` utility to obtain password associated with SSID ([details](https://macromates.com/blog/2006/keychain-access-from-shell/)).
+
+```bash
+> security find-generic-password \
+-D 'AirPort network password' \
+-ga "Guest WiFi" \
+2>&1 >/dev/null
+
+password: "HelloFriends!"
+```
+
+QR Code format described in [ZXing docs](https://github.com/zxing/zxing/wiki/Barcode-Contents#wi-fi-network-config-android-ios-11).
+
+Project inspired by [rauchg/wifi-password](https://github.com/rauchg/wifi-password).
