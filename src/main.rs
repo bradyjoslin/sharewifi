@@ -54,23 +54,17 @@ fn connected_ssid() -> AppResult<String> {
 
 fn password_from_keychain(ssid: &str) -> AppResult<String> {
     let output = Command::new("security")
-        .arg("find-generic-password")
+        .args(&["find-generic-password", "-w"])
         .args(&["-D", "AirPort network password"])
         .args(&["-ga", ssid])
         .output();
     match output {
         Ok(o) => match o.status.code().unwrap() {
             0 => {
-                let keychain_info = String::from_utf8(o.stderr).expect("Not UTF-8");
-                let password = keychain_info
-                    .lines()
-                    .last()
-                    .unwrap_or_default()
-                    .split("password:")
-                    .last()
-                    .unwrap_or_default()
+                let password = String::from_utf8(o.stdout)
+                    .expect("Not UTF-8")
                     .trim()
-                    .replace("\"", "");
+                    .to_owned();
                 match password.as_str() {
                     "" => Err(Error::PasswordNotFound),
                     _ => Ok(password),
