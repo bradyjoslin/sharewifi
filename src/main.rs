@@ -10,19 +10,19 @@ use errors::{AppResult, Error};
 
 fn main() -> AppResult<()> {
     let app = app::App::from_args();
-    let ssid = match app.ssid {
+    let ssid = match &app.ssid {
         Some(ssid_in) => ssid_in.to_owned(),
         None => connected_ssid()?,
     };
     let password = password_from_keychain(&ssid)?;
 
-    if app.verbose {
-        println!("SSID: {}\nPassword: {}", ssid, password);
-    } else if app.qrcode {
-        let image = qrcode(&ssid, &password);
-        println!("{}", image);
-    } else {
-        println!("{}", password);
+    match app {
+        app::App { verbose: true, .. } => println!("SSID: {}\nPassword: {}", ssid, password),
+        app::App { qrcode: true, .. } => {
+            let image = qrcode(&ssid, &password);
+            println!("{}", image);
+        }
+        _ => println!("{}", password),
     }
 
     Ok(())
