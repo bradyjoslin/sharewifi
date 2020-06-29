@@ -14,18 +14,19 @@ Google Lens displaying QR Code details along with button to join network with si
 
 CLI help output:
 
-```bash
-Wi-Fi Password 0.1.0
+```text
+Wi-Fi Password 0.1.3
 Uses MacOS airport and keychain CLI tools to obtain the Wi-Fi passwords
 
 USAGE:
     wifi-password [FLAGS] [OPTIONS]
 
 FLAGS:
-    -h, --help       Prints help information
-    -q, --qrcode     Prints Wi-Fi Network config QR Code for Android and iOS 11+
-    -V, --version    Prints version information
-    -v, --verbose    Verbose output
+    -a, --always-allow    Disables future confirmation prompts to access this password. Sudo required
+    -h, --help            Prints help information
+    -q, --qrcode          Prints Wi-Fi Network config QR Code for Android and iOS 11+
+    -V, --version         Prints version information
+    -v, --verbose         Verbose output
 
 OPTIONS:
     -s, --ssid <ssid>    Specify an SSID.  Defaults to currently connected Wi-Fi
@@ -85,5 +86,13 @@ password: "HelloFriends!"
 ```
 
 QR Code format described in [ZXing docs](https://github.com/zxing/zxing/wiki/Barcode-Contents#wi-fi-network-config-android-ios-11).
+
+The `always-allow` option is implemented by updating the System keychain record for that SSID so that `security` is always allowed access to the password. This requires sudo and should only be done for Wi-Fi passwords not considered secret, as will allow this app and others to read the password without credentials.
+
+```bash
+sudo security add-generic-password -U -a <ssid> -D "AirPort network password" -T "/usr/bin/security" -s "AirPort"  /Library/Keychains/System.keychain
+```
+
+![keychain](keychain.png)
 
 Project inspired by [rauchg/wifi-password](https://github.com/rauchg/wifi-password).
