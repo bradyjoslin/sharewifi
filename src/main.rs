@@ -19,7 +19,7 @@ fn main() -> AppResult<()> {
     let password = password_from_keychain(&ssid)?;
 
     if app.always_allow == true {
-        persist_access_to_password(&ssid)?;
+        always_allow(&ssid)?;
     }
 
     match app {
@@ -83,7 +83,7 @@ fn password_from_keychain(ssid: &str) -> AppResult<String> {
     }
 }
 
-fn persist_access_to_password(ssid: &str) -> AppResult<()> {
+fn always_allow(ssid: &str) -> AppResult<()> {
     println!(
         "Warning: keychain will no longer provide a confirmation prompt to access this password."
     );
@@ -118,7 +118,7 @@ fn persist_access_to_password(ssid: &str) -> AppResult<()> {
         Ok(())
     } else {
         // println!("Confirmation must be y or n!");
-        persist_access_to_password(ssid)?;
+        always_allow(ssid)?;
         Ok(())
     }?;
 
