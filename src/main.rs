@@ -1,5 +1,7 @@
 use qrcode::render::unicode;
 use qrcode::QrCode;
+use std::io;
+use std::io::Write;
 use std::process::Command;
 use structopt::StructOpt;
 
@@ -15,6 +17,10 @@ fn main() -> AppResult<()> {
         None => connected_ssid()?,
     };
     let password = password_from_keychain(&ssid)?;
+
+    if app.always_allow == true {
+        persist_access_to_password(&ssid)?;
+    }
 
     match app {
         app::App { verbose: true, .. } => println!("SSID: {}\nPassword: {}", ssid, password),
@@ -75,6 +81,48 @@ fn password_from_keychain(ssid: &str) -> AppResult<String> {
         },
         Err(e) => panic!(e),
     }
+}
+
+fn persist_access_to_password(ssid: &str) -> AppResult<()> {
+    println!(
+        "Warning: keychain will no longer provide a confirmation prompt to access this password."
+    );
+    println!("Only use this option for Wi-Fi passwords you don't consider secure.");
+    print!("Confirm (y/n): ");
+    io::stdout().flush().unwrap();
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+    let yesno = input.as_str().trim();
+
+    if yesno == "y" {
+        let output = Command::new("security")
+            .args(&["add-generic-password", "-U"])
+            .args(&["-a", ssid])
+            .args(&["-D", "AirPort network password"])
+            .args(&["-T", "/usr/bin/security"])
+            .args(&["-s", "AirPort"])
+            .arg("/Library/Keychains/System.keychain")
+            .output();
+        match output {
+            Ok(o) => match o.status.code().unwrap() {
+                0 => {
+                    println!("Keychain updated...\n");
+                    Ok(())
+                }
+                _ => Err(Error::KeyChainWriteAccess),
+            },
+            Err(e) => panic!(e),
+        }
+    } else if yesno == "n" {
+        println!("Skipped updating keychain...\n");
+        Ok(())
+    } else {
+        // println!("Confirmation must be y or n!");
+        persist_access_to_password(ssid)?;
+        Ok(())
+    }?;
+
+    Ok(())
 }
 
 fn qrcode(ssid: &str, password: &str) -> String {

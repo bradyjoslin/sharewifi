@@ -12,6 +12,10 @@ pub struct App {
     #[structopt(short, long)]
     pub qrcode: bool,
 
+    /// Keychain will no longer provide a confirmation prompt to access this password. Sudo required.
+    #[structopt(short, long)]
+    pub always_allow: bool,
+
     /// Verbose output
     #[structopt(short, long)]
     pub verbose: bool,

@@ -5,6 +5,7 @@ pub enum Error {
     SSIDMissing,
     PasswordNotFound,
     SSIDNotFound,
+    KeyChainWriteAccess,
 }
 
 pub type AppResult<T> = Result<T, Error>;
@@ -19,6 +20,7 @@ impl fmt::Display for Error {
                 "No SSID found.  Please connect to Wi-Fi or provide an SSID."
             ),
             Error::SSIDNotFound => write!(f, "SSID not found in keychain"),
+            Error::KeyChainWriteAccess => write!(f, "Error updating keychain. Did you sudo?"),
         }
     }
 }

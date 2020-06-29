@@ -223,7 +223,7 @@ checksum = "078775d0255232fb988e6fccf26ddc9d1ac274299aaedcedce21c6f72cc533ce"
 
 [[package]]
 name = "wifi-password"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "qrcode",
  "structopt",
