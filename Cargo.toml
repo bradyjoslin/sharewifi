@@ -1,6 +1,6 @@
 [package]
 name = "wifi-password"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Joslin, Brady W (Brady) <brady@bradyjoslin.com>"]
 edition = "2018"
 

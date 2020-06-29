@@ -1,5 +1,7 @@
 use qrcode::render::unicode;
 use qrcode::QrCode;
+use std::io;
+use std::io::Write;
 use std::process::Command;
 use structopt::StructOpt;
 
@@ -15,6 +17,10 @@ fn main() -> AppResult<()> {
         None => connected_ssid()?,
     };
     let password = password_from_keychain(&ssid)?;
+
+    if app.always_allow == true {
+        always_allow(&ssid)?;
+    }
 
     match app {
         app::App { verbose: true, .. } => println!("SSID: {}\nPassword: {}", ssid, password),
@@ -75,6 +81,45 @@ fn password_from_keychain(ssid: &str) -> AppResult<String> {
         },
         Err(e) => panic!(e),
     }
+}
+
+fn always_allow(ssid: &str) -> AppResult<()> {
+    println!(
+        "Warning: Only use always-allow for Wi-Fi passwords you don't consider secret. The password for {} in your keychain will be accessible by this app and others without credentials.", ssid);
+    print!("Confirm (y/n): ");
+    io::stdout().flush().unwrap();
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+    let input = input.as_str().trim();
+
+    if input == "y" {
+        let output = Command::new("security")
+            .args(&["add-generic-password", "-U"])
+            .args(&["-a", ssid])
+            .args(&["-D", "AirPort network password"])
+            .args(&["-T", "/usr/bin/security"])
+            .args(&["-s", "AirPort"])
+            .arg("/Library/Keychains/System.keychain")
+            .output();
+        match output {
+            Ok(o) => match o.status.code().unwrap() {
+                0 => {
+                    println!("Keychain updated...\n");
+                    Ok(())
+                }
+                _ => Err(Error::KeyChainWriteAccess),
+            },
+            Err(e) => panic!(e),
+        }
+    } else if input == "n" {
+        println!("Skipped keychain update...\n");
+        Ok(())
+    } else {
+        always_allow(ssid)?;
+        Ok(())
+    }?;
+
+    Ok(())
 }
 
 fn qrcode(ssid: &str, password: &str) -> String {
