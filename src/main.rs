@@ -85,16 +85,14 @@ fn password_from_keychain(ssid: &str) -> AppResult<String> {
 
 fn always_allow(ssid: &str) -> AppResult<()> {
     println!(
-        "Warning: keychain will no longer provide a confirmation prompt to access this password."
-    );
-    println!("Only use this option for Wi-Fi passwords you don't consider secure.");
+        "Warning: Only use always-allow for Wi-Fi passwords you don't consider secret. The password for {} in your keychain will be accessible by this app and others without credentials.", ssid);
     print!("Confirm (y/n): ");
     io::stdout().flush().unwrap();
     let mut input = String::new();
     io::stdin().read_line(&mut input).unwrap();
-    let yesno = input.as_str().trim();
+    let input = input.as_str().trim();
 
-    if yesno == "y" {
+    if input == "y" {
         let output = Command::new("security")
             .args(&["add-generic-password", "-U"])
             .args(&["-a", ssid])
@@ -113,11 +111,10 @@ fn always_allow(ssid: &str) -> AppResult<()> {
             },
             Err(e) => panic!(e),
         }
-    } else if yesno == "n" {
-        println!("Skipped updating keychain...\n");
+    } else if input == "n" {
+        println!("Skipped keychain update...\n");
         Ok(())
     } else {
-        // println!("Confirmation must be y or n!");
         always_allow(ssid)?;
         Ok(())
     }?;
