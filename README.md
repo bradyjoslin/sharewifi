@@ -32,6 +32,14 @@ OPTIONS:
     -s, --ssid <ssid>    Specify an SSID.  Defaults to currently connected Wi-Fi
 ```
 
+## Installing with Homebrew
+
+The easiest way to install wifi-password is by using Homebrew.
+
+`brew install bradyjoslin/wifi-password/wifi-password`
+
+*Note: if you just run `brew install wifi-password` instead of the fully qualified name noted above, that will install [rauchg's](https://github.com/rauchg/wifi-password) bash implementation instead.*
+
 ## Building and Installing
 
 Building and installing requires [Rust](https://www.rust-lang.org/tools/install). To build, clone the repository and then:
