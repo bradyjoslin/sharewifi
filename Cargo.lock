@@ -131,6 +131,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "sharewifi"
+version = "0.1.4"
+dependencies = [
+ "qrcode",
+ "structopt",
+]
+
+[[package]]
 name = "strsim"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -220,14 +228,6 @@ name = "version_check"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "078775d0255232fb988e6fccf26ddc9d1ac274299aaedcedce21c6f72cc533ce"
-
-[[package]]
-name = "wifi-password"
-version = "0.1.3"
-dependencies = [
- "qrcode",
- "structopt",
-]
 
 [[package]]
 name = "winapi"

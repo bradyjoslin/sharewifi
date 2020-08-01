@@ -1,4 +1,4 @@
-# Wi-Fi Password
+# Share Wi-Fi Connection Info
 
 Quickly share Wi-Fi passwords and connection details, including QR codes that auto-configure iOS and Android devices.
 
@@ -15,11 +15,11 @@ Google Lens displaying QR Code details along with button to join network with si
 CLI help output:
 
 ```text
-Wi-Fi Password 0.1.3
+sharewifi 0.1.4
 Uses MacOS airport and keychain CLI tools to obtain the Wi-Fi passwords
 
 USAGE:
-    wifi-password [FLAGS] [OPTIONS]
+    sharewifi [FLAGS] [OPTIONS]
 
 FLAGS:
     -a, --always-allow    Disables future confirmation prompts to access this password. Sudo required
@@ -36,9 +36,7 @@ OPTIONS:
 
 The easiest way to install wifi-password is by using Homebrew.
 
-`brew install bradyjoslin/wifi-password/wifi-password`
-
-*Note: if you just run `brew install wifi-password` instead of the fully qualified name noted above, that will install [rauchg's](https://github.com/rauchg/wifi-password) bash implementation instead.*
+`brew install bradyjoslin/sharewifi`
 
 ## Building and Installing
 
