@@ -2,8 +2,6 @@
 
 Quickly share Wi-Fi passwords and connection details, including QR codes that auto-configure iOS and Android devices.
 
-Uses two built-in MacOS CLI utilities to function. `airport` gets information on currently connected Wi-Fi, `security` is used to obtain password. Running `security` provides a login prompt to access keychain, as authentication is required in order to obtain the password ([more](#behind-the-scenes)).
-
 ## Usage
 
 ```text
@@ -67,9 +65,9 @@ cargo install --path .
 
 ## Behind the Scenes
 
-Further explanation of how this works.
+Uses two built-in macOS CLI utilities to function under the hood. `airport` gets information on currently connected Wi-Fi, `security` is used to obtain password. Running `security` provides a login prompt to access keychain, as authentication is required in order to obtain the password.
 
-Default MacOS `airport` utility location:
+Default macOS `airport` utility location:
 
 `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport`.
 
