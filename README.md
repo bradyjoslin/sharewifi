@@ -5,8 +5,8 @@ Quickly share Wi-Fi passwords and connection details, including QR codes that au
 ## Usage
 
 ```text
-sharewifi 0.1.4
-Uses MacOS airport and keychain CLI tools to obtain the Wi-Fi passwords
+sharewifi 0.1.5
+Quickly share Wi-Fi passwords and connection details
 
 USAGE:
     sharewifi [FLAGS] [OPTIONS]
