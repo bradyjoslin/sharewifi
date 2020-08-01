@@ -1,6 +1,6 @@
 use structopt::StructOpt;
 
-/// Uses MacOS airport and keychain CLI tools to obtain the Wi-Fi passwords.
+/// Uses macOS airport and keychain CLI tools to obtain the Wi-Fi passwords.
 #[derive(StructOpt, Debug)]
 #[structopt(name = "Wi-Fi Password")]
 pub struct App {
