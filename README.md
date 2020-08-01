@@ -1,6 +1,6 @@
-# Share Wi-Fi Connection Info
+# Share Wi-Fi Connection Info on macOS
 
-Quickly share Wi-Fi passwords and connection details, including QR codes that auto-configure iOS and Android devices.
+Quickly share Wi-Fi passwords and connection details. Generates QR codes that auto-configure iOS and Android devices.
 
 ## Usage
 
