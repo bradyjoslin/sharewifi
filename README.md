@@ -2,17 +2,7 @@
 
 Quickly share Wi-Fi passwords and connection details, including QR codes that auto-configure iOS and Android devices.
 
-Uses two built-in MacOS CLI utilities to function. `airport` gets information on currently connected Wi-Fi, `security` is used to obtain password. Running `security` provides a login prompt to access keychain, as authentication is required in order to obtain the password ([more](#behind-the-scenes)).
-
-Sample usage:
-
-![screenshot](./screenshot.png)
-
-Google Lens displaying QR Code details along with button to join network with single tap:
-
-![google lens](./googlelens.png)
-
-CLI help output:
+## Usage
 
 ```text
 sharewifi 0.1.4
@@ -32,11 +22,20 @@ OPTIONS:
     -s, --ssid <ssid>    Specify an SSID.  Defaults to currently connected Wi-Fi
 ```
 
+![screenshot](./screenshot.png)
+
+Google Lens displaying QR Code details along with button to join network with single tap:
+
+![google lens](./googlelens.png)
+
 ## Installing with Homebrew
 
-The easiest way to install wifi-password is by using Homebrew.
+The easiest way to install sharewifi is by using Homebrew.
 
-`brew install bradyjoslin/sharewifi`
+```bash
+brew tap bradyjoslin/sharewifi
+brew install sharewifi
+```
 
 ## Building and Installing
 
@@ -66,9 +65,9 @@ cargo install --path .
 
 ## Behind the Scenes
 
-Further explanation of how this works.
+Uses two built-in macOS CLI utilities to function under the hood. `airport` gets information on currently connected Wi-Fi, `security` is used to obtain password. Running `security` provides a login prompt to access keychain, as authentication is required in order to obtain the password.
 
-Default MacOS `airport` utility location:
+Default macOS `airport` utility location:
 
 `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport`.
 
