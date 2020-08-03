@@ -22,11 +22,11 @@ OPTIONS:
     -s, --ssid <ssid>    Specify an SSID.  Defaults to currently connected Wi-Fi
 ```
 
-![screenshot](./screenshot.png)
+![screenshot](./images/screenshot.png)
 
 Google Lens displaying QR Code details along with button to join network with single tap:
 
-![google lens](./googlelens.png)
+![google lens](./images/googlelens.png)
 
 ## Installing with Homebrew
 
@@ -63,6 +63,12 @@ To install:
 cargo install --path .
 ```
 
+## Espanso Integration
+
+[Espanso](https://espanso.org/) is a free cross-platform text expander written in Rust. The [sharewifi espanso package](https://github.com/bradyjoslin/espanso-package-sharewifi/) allows sharewifi to be used in any text editor.
+
+![sharewifi](./images/sharewifi.gif)
+
 ## Behind the Scenes
 
 Uses two built-in macOS CLI utilities to function under the hood. `airport` gets information on currently connected Wi-Fi, `security` is used to obtain password. Running `security` provides a login prompt to access keychain, as authentication is required in order to obtain the password.
@@ -98,6 +104,6 @@ The `always-allow` option is implemented by updating the System keychain record 
 sudo security add-generic-password -U -a <ssid> -D "AirPort network password" -T "/usr/bin/security" -s "AirPort"  /Library/Keychains/System.keychain
 ```
 
-![keychain](keychain.png)
+![keychain](./images/keychain.png)
 
 Project inspired by [rauchg/wifi-password](https://github.com/rauchg/wifi-password).
