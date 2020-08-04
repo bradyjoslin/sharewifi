@@ -65,7 +65,7 @@ cargo install --path .
 
 ## Espanso Integration
 
-[Espanso](https://espanso.org/) is a free cross-platform text expander written in Rust. The [sharewifi espanso package](https://github.com/bradyjoslin/espanso-package-sharewifi/) allows sharewifi to be used in any text editor.
+[Espanso](https://espanso.org/) is a free cross-platform text expander written in Rust. The [sharewifi espanso package](https://github.com/bradyjoslin/espanso-package-sharewifi/) makes `sharewifi` available via text expansion outside of the command line, including qr code rendering in plain text editors.
 
 ![sharewifi](./images/sharewifi.gif)
 
