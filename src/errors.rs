@@ -19,7 +19,7 @@ impl fmt::Display for Error {
                 f,
                 "No SSID found.  Please connect to Wi-Fi or provide an SSID."
             ),
-            Error::SSIDNotFound => write!(f, "SSID not found in keychain"),
+            Error::SSIDNotFound => write!(f, "SSID not found"),
             Error::KeyChainWriteAccess => write!(f, "Error updating keychain. Did you sudo?"),
         }
     }
