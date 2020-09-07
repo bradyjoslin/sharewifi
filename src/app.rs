@@ -13,6 +13,7 @@ pub struct App {
     pub qrcode: bool,
 
     /// Disables future confirmation prompts to access this password. Sudo required.
+    #[cfg(target_os = "macos")]
     #[structopt(short, long)]
     pub always_allow: bool,
 

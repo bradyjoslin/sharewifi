@@ -1,5 +1,6 @@
 use std::fmt;
 
+#[cfg(target_os = "macos")]
 pub enum Error {
     KeychainAccess,
     SSIDMissing,
@@ -8,8 +9,16 @@ pub enum Error {
     KeyChainWriteAccess,
 }
 
+#[cfg(target_os = "windows")]
+pub enum Error {
+    SSIDMissing,
+    PasswordNotFound,
+    SSIDNotFound,
+}
+
 pub type AppResult<T> = Result<T, Error>;
 
+#[cfg(target_os = "macos")]
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -21,6 +30,20 @@ impl fmt::Display for Error {
             ),
             Error::SSIDNotFound => write!(f, "SSID not found"),
             Error::KeyChainWriteAccess => write!(f, "Error updating keychain. Did you sudo?"),
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Error::PasswordNotFound => write!(f, "No password found"),
+            Error::SSIDMissing => write!(
+                f,
+                "No SSID found.  Please connect to Wi-Fi or provide an SSID."
+            ),
+            Error::SSIDNotFound => write!(f, "SSID not found"),
         }
     }
 }
