@@ -19,3 +19,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
+      
+  build_on_windows:
+    
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose
