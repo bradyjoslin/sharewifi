@@ -1,8 +1,9 @@
-use std::process::Command;
+use std::{io, process::Command};
 
 use crate::errors::{AppResult, Error};
+use io::Write;
 
-fn connected_ssid() -> AppResult<String> {
+pub fn connected_ssid() -> AppResult<String> {
     let airport_path =
         "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport";
     let output = Command::new(airport_path)
@@ -26,7 +27,7 @@ fn connected_ssid() -> AppResult<String> {
     }
 }
 
-fn get_password(ssid: &str) -> AppResult<String> {
+pub fn get_password(ssid: &str) -> AppResult<String> {
     let output = Command::new("security")
         .args(&["find-generic-password", "-w"])
         .args(&["-D", "AirPort network password"])
@@ -51,7 +52,7 @@ fn get_password(ssid: &str) -> AppResult<String> {
     }
 }
 
-fn always_allow(ssid: &str) -> AppResult<()> {
+pub fn always_allow(ssid: &str) -> AppResult<()> {
     println!(
         "Warning: Only use always-allow for Wi-Fi passwords you don't consider secret. The password for {} in your keychain will be accessible by this app and others without credentials.", ssid);
     print!("Confirm (y/n): ");
