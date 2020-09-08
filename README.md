@@ -41,7 +41,7 @@ brew tap bradyjoslin/sharewifi
 brew install sharewifi
 ```
 
-## Building and Installing
+### Building and Installing From Source
 
 Building and installing requires [Rust](https://www.rust-lang.org/tools/install). To build, clone the repository and then:
 
