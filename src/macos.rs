@@ -1,3 +1,4 @@
+use regex::Regex;
 use run_script::ScriptOptions;
 use std::io;
 
@@ -12,20 +13,18 @@ pub fn connected_ssid() -> AppResult<String> {
     )
     .expect("Airport not found");
 
-    let ssid = output
-        .lines()
-        .filter(|x| x.contains("SSID"))
-        .last()
-        .unwrap_or_default()
-        .split("SSID:")
-        .last()
-        .unwrap_or_default()
-        .trim()
-        .to_owned();
+    let re = Regex::new(r#"\bSSID:\s?(.*)"#).unwrap();
 
-    match ssid.as_str() {
+    let ssid = re
+        .captures(&output)
+        .expect("Connected SSID not found")
+        .get(1)
+        .expect("Connected SSID not found")
+        .as_str();
+
+    match ssid {
         "" => Err(Error::SSIDMissing),
-        _ => Ok(ssid),
+        _ => Ok(ssid.to_string()),
     }
 }
 
