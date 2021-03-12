@@ -17,7 +17,7 @@ mod macos;
 #[cfg(target_os = "macos")]
 use crate::macos::*;
 
-use errors::{AppResult};
+use errors::AppResult;
 
 fn main() -> AppResult<()> {
     let app = app::App::from_args();

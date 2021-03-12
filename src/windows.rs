@@ -9,13 +9,14 @@ pub fn connected_ssid() -> AppResult<String> {
         .arg("interface")
         .output()
         .expect("Unable to get Wi-Fi info");
-    
+
     let wifi_info = String::from_utf8(output.stdout).expect("Not UTF-8");
-    
+
     let ssid = wifi_info
         .lines()
         .filter(|x| x.contains("SSID"))
-        .into_iter().nth(0)
+        .into_iter()
+        .nth(0)
         .unwrap_or_default()
         .split(":")
         .last()
