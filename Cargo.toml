@@ -7,3 +7,4 @@ version = "0.1.6"
 [dependencies]
 qrcode = {version = "0.12", default-features = false}
 structopt = "0.3"
+run_script = "0.7.0"
