@@ -9,8 +9,12 @@ env:
 
 jobs:
 
-  lint:
-    runs-on: ubuntu-latest
+  CI:
+    runs-on: $ {{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, windows-lastest]
 
     steps:
       - uses: actions/checkout@v2
@@ -27,14 +31,6 @@ jobs:
       
       - name: Check Idiomatic
         run: cargo clippy --all --all-features -- -D warnings
-      
-  build:
-    runs-on: $ {{ matrix.os }}
 
-    strategy:
-      matrix:
-        os: [macos-latest, windows-lastest]
-
-    steps:
       - name: Build
         run: cargo build --verbose
