@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: cargo build --release
+
+      - name: tar archive
+        run: |
+          cd target/release
+          tar -czf sharewifi-mac.tar.gz sharewifi
+          shasum -a 256 sharewifi-mac.tar.gz
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          path: target/release/sharewifi-mac.tar.gz
