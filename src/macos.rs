@@ -17,32 +17,29 @@ pub fn connected_ssid() -> AppResult<String> {
 
     let ssid = re
         .captures(&output)
-        .expect("Connected SSID not found")
+        .ok_or_else(|| Error::SSIDMissing)?
         .get(1)
-        .expect("Connected SSID not found")
+        .ok_or_else(|| Error::SSIDMissing)?
         .as_str();
 
-    match ssid {
-        "" => Err(Error::SSIDMissing),
-        _ => Ok(ssid.to_string()),
+    if ssid.is_empty() {
+        Err(Error::SSIDMissing)
+    } else {
+        Ok(ssid.to_string())
     }
 }
 
 pub fn get_password(ssid: &str) -> AppResult<String> {
     let options = ScriptOptions::new();
 
-    let (code, output, error) = run_script::run_script!(
+    let (code, output, _) = run_script::run_script!(
         r#"
             security find-generic-password -w -D "AirPort network password" -ga "$1"
         "#,
         &vec![ssid.to_string()],
         options
     )
-    .unwrap();
-
-    if !error.is_empty() {
-        panic!(error)
-    };
+    .expect("Problem calling security tool");
 
     match code {
         0 => {
@@ -78,7 +75,7 @@ pub fn always_allow(ssid: &str) -> AppResult<()> {
             &vec![ssid.to_string()],
             options
         )
-        .unwrap();
+        .expect("Problem calling security tool");
 
         match code {
             0 => {
