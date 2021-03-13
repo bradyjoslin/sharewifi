@@ -17,9 +17,9 @@ pub fn connected_ssid() -> AppResult<String> {
 
     let ssid = re
         .captures(&output)
-        .ok_or_else(|| Error::SSIDMissing)?
+        .ok_or(Error::SSIDMissing)?
         .get(1)
-        .ok_or_else(|| Error::SSIDMissing)?
+        .ok_or(Error::SSIDMissing)?
         .as_str();
 
     if ssid.is_empty() {

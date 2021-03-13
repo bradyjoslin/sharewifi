@@ -28,7 +28,7 @@ fn main() -> AppResult<()> {
     let password = get_password(&ssid)?;
 
     #[cfg(target_os = "macos")]
-    if app.always_allow == true {
+    if app.always_allow {
         always_allow(&ssid)?;
     }
 
