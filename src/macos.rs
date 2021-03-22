@@ -47,10 +47,7 @@ pub fn get_password(ssid: &str) -> AppResult<String> {
             }
         }
         Err(err) if err.code() == -25300 => Err(Error::SSIDNotFound),
-        Err(err) => {
-            println!("This happened: {} - {}\nSSID: {}", err.code(), err, ssid);
-            Err(Error::KeychainAccess)
-        }
+        _ => Err(Error::KeychainAccess),
     }
 }
 
