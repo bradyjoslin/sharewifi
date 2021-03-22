@@ -1,5 +1,6 @@
 use regex::Regex;
 use run_script::ScriptOptions;
+use security_framework::os::macos::keychain::SecKeychain;
 use std::io;
 
 use crate::errors::{AppResult, Error};
@@ -30,27 +31,26 @@ pub fn connected_ssid() -> AppResult<String> {
 }
 
 pub fn get_password(ssid: &str) -> AppResult<String> {
-    let options = ScriptOptions::new();
+    let keychain = "/Library/Keychains/System.keychain";
+    let service = "AirPort";
+    let res = SecKeychain::open(keychain)
+        .unwrap()
+        .find_generic_password(service, ssid);
 
-    let (code, output, _) = run_script::run_script!(
-        r#"
-            security find-generic-password -w -D "AirPort network password" -ga "$1"
-        "#,
-        &vec![ssid.to_string()],
-        options
-    )
-    .expect("Problem calling security tool");
-
-    match code {
-        0 => {
-            let password = output.trim().to_owned();
-            match password.as_str() {
-                "" => Err(Error::PasswordNotFound),
-                _ => Ok(password),
+    match res {
+        Ok((password, _)) => {
+            let password = String::from_utf8(password.to_owned()).unwrap();
+            if password.is_empty() {
+                Err(Error::PasswordNotFound)
+            } else {
+                Ok(password)
             }
         }
-        44 => Err(Error::SSIDNotFound),
-        _ => Err(Error::KeychainAccess),
+        Err(err) if err.code() == -25300 => Err(Error::SSIDNotFound),
+        Err(err) => {
+            println!("This happened: {} - {}\nSSID: {}", err.code(), err, ssid);
+            Err(Error::KeychainAccess)
+        }
     }
 }
 

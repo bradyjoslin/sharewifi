@@ -9,3 +9,4 @@ qrcode = {version = "0.12", default-features = false}
 structopt = "0.3"
 run_script = "0.7.0"
 regex = "1.4.4"
+security-framework = "2.1.2"
