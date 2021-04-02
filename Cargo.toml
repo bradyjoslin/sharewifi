@@ -2,7 +2,7 @@
 authors = ["Joslin, Brady W (Brady) <brady@bradyjoslin.com>"]
 edition = "2018"
 name = "sharewifi"
-version = "0.1.7"
+version = "0.1.8"
 
 [dependencies]
 qrcode = {version = "0.12", default-features = false}
