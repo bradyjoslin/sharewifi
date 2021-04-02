@@ -8,7 +8,7 @@
     "preuninstall": "node ./uninstall.js"
   },
   "bin": {
-    "rsieve": "./run.js"
+    "sharewifi": "./run.js"
   },
   "repository": {
     "type": "git",
