@@ -15,13 +15,13 @@ pub fn connected_ssid() -> AppResult<String> {
 
     let ssid = re
         .captures(&output)
-        .ok_or(Error::SSIDMissing)?
+        .ok_or(Error::SsidMissing)?
         .get(1)
-        .ok_or(Error::SSIDMissing)?
+        .ok_or(Error::SsidMissing)?
         .as_str();
 
     if ssid.is_empty() {
-        Err(Error::SSIDMissing)
+        Err(Error::SsidMissing)
     } else {
         Ok(ssid.to_string())
     }
@@ -40,7 +40,7 @@ pub fn get_password(ssid: &str) -> AppResult<String> {
     .expect("unable to get Wi-Fi info");
 
     if output.contains("is not found on the system") || !error.is_empty() {
-        Err(Error::SSIDNotFound)
+        Err(Error::SsidNotFound)
     } else {
         let re = Regex::new(r#"Key\sContent\s+:\s(.*)"#).unwrap();
 
