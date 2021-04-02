@@ -17,13 +17,13 @@ pub fn connected_ssid() -> AppResult<String> {
 
     let ssid = re
         .captures(&output)
-        .ok_or(Error::SSIDMissing)?
+        .ok_or(Error::SsidMissing)?
         .get(1)
-        .ok_or(Error::SSIDMissing)?
+        .ok_or(Error::SsidMissing)?
         .as_str();
 
     if ssid.is_empty() {
-        Err(Error::SSIDMissing)
+        Err(Error::SsidMissing)
     } else {
         Ok(ssid.to_string())
     }
@@ -49,7 +49,7 @@ pub fn get_password(ssid: &str) -> AppResult<String> {
                 _ => Ok(password),
             }
         }
-        44 => Err(Error::SSIDNotFound),
+        44 => Err(Error::SsidNotFound),
         _ => Err(Error::KeychainAccess),
     }
 }
