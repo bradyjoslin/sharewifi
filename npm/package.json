@@ -1,0 +1,31 @@
+{
+  "name": "sharewifi",
+  "version": "0.1.8",
+  "description": "Quickly share Wi-Fi connection info on macOS and Windows.",
+  "main": "binary.js",
+  "scripts": {
+    "postinstall": "node ./install.js",
+    "preuninstall": "node ./uninstall.js"
+  },
+  "bin": {
+    "rsieve": "./run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bradyjoslin/sharewifi.git"
+  },
+  "author": "brady@bradyjoslin.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bradyjoslin/sharewifi/issues"
+  },
+  "homepage": "https://github.com/bradyjoslin/sharewifi#readme",
+  "keywords": [
+    "cli",
+    "wifi",
+    "security"
+  ],
+  "dependencies": {
+    "@cloudflare/binary-install": "0.2.0"
+  }
+}

@@ -1,15 +1,11 @@
-name: CI
+name: Lint
 
 on:
   pull_request:
-    branches: [ master ]
-
-env:
-  CARGO_TERM_COLOR: always
+    branches: [master]
 
 jobs:
-
-  CI:
+  lint:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -18,7 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Install checkers and linters
         run: |
           rustup update stable
@@ -28,7 +24,7 @@ jobs:
 
       - name: Check Formatting
         run: cargo fmt --all -- --check
-      
+
       - name: Check Idiomatic
         run: cargo clippy --all --all-features -- -D warnings
 

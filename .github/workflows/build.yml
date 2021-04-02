@@ -1,0 +1,79 @@
+on:
+  push:
+    tags:
+      - "v*"
+
+name: Build
+
+env:
+  RELEASE_BIN: rsieve
+  RELEASE_DIR: artifacts
+  WINDOWS_TARGET: x86_64-pc-windows-msvc
+  MACOS_TARGET: x86_64-apple-darwin
+
+jobs:
+  build:
+    name: Build artifacts
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        build: [macos, windows]
+        include:
+          - build: macos
+            os: macos-latest
+          - build: windows
+            os: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Query version number
+        id: get_version
+        shell: bash
+        run: |
+          echo "using version tag ${GITHUB_REF:10}"
+          echo ::set-output name=version::"${GITHUB_REF:10}"
+
+      - name: Install Rust
+        run: |
+          rustup update stable
+          rustup default stable
+
+      - name: Install p7zip (MacOS)
+        if: matrix.build == 'macos'
+        run: brew install p7zip
+
+      - name: Build (MacOS)
+        if: matrix.build == 'macos'
+        run: cargo build --release
+
+      - name: Build (Windows)
+        if: matrix.build == 'windows'
+        run: cargo build --release
+        env:
+          RUSTFLAGS: -Ctarget-feature=+crt-static
+
+      - name: Create artifact directory
+        run: |
+          mkdir ${{ env.RELEASE_DIR }}
+          mkdir dist
+
+      - name: Create tarball (Windows)
+        if: matrix.build == 'windows'
+        shell: bash
+        run: |
+          mv ./target/release/${{ env.RELEASE_BIN }}.exe ./dist/${{ env.RELEASE_BIN }}.exe
+          7z a -ttar -so -an ./dist | 7z a -si ./${{ env.RELEASE_DIR }}/${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-${{ env.WINDOWS_TARGET }}.tar.gz
+
+      - name: Create tarball (MacOS)
+        if: matrix.build == 'macos'
+        run: |
+          mv ./target/release/${{ env.RELEASE_BIN }} ./dist/${{ env.RELEASE_BIN }}
+          7z a -ttar -so -an ./dist | 7z a -si ./${{ env.RELEASE_DIR }}/${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-${{ env.MACOS_TARGET }}.tar.gz
+
+      - name: Upload Zip
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ matrix.build }}
+          path: ./${{ env.RELEASE_DIR }}
