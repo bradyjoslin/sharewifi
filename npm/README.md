@@ -32,6 +32,12 @@ Google Lens displaying QR Code details along with button to join network with si
 
 ## Installing
 
+### npm
+
+```sh
+npm i sharewifi -g
+```
+
 ### macOS using Homebew
 
 The easiest way to install sharewifi is by using Homebrew.
