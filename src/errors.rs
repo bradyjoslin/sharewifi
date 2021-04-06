@@ -1,5 +1,14 @@
 use std::fmt;
-use bindings::{windows::Error as WindowsError};
+
+#[cfg(target_os = "windows")]
+use bindings::windows::Error as WindowsError;
+
+#[cfg(target_os = "windows")]
+pub enum Error {
+    SsidMissing,
+    PasswordNotFound,
+    SsidNotFound,
+}
 
 #[cfg(target_os = "macos")]
 pub enum Error {
@@ -8,13 +17,6 @@ pub enum Error {
     PasswordNotFound,
     SsidNotFound,
     KeyChainWriteAccess,
-}
-
-#[cfg(target_os = "windows")]
-pub enum Error {
-    SsidMissing,
-    PasswordNotFound,
-    SsidNotFound,
 }
 
 pub type AppResult<T> = Result<T, Error>;

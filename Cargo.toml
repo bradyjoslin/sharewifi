@@ -6,8 +6,10 @@ version = "0.1.8"
 
 [dependencies]
 qrcode = {version = "0.12", default-features = false}
-structopt = "0.3"
-run_script = "0.7.0"
 regex = "1.4.5"
-bindings = { path = "bindings" }
-tokio = {version= "1.4", features = ["full"]}
+run_script = "0.7.0"
+structopt = "0.3"
+tokio = {version = "1.4", features = ["full"]}
+
+[target.windows]
+bindings = {path = "bindings"}
