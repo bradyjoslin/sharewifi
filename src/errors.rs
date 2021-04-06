@@ -1,4 +1,5 @@
 use std::fmt;
+use bindings::{windows::Error as WindowsError};
 
 #[cfg(target_os = "macos")]
 pub enum Error {
@@ -45,6 +46,14 @@ impl fmt::Display for Error {
             ),
             Error::SsidNotFound => write!(f, "SSID not found"),
         }
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl From<WindowsError> for Error {
+    #[inline]
+    fn from(_: WindowsError) -> Error {
+        Error::SsidNotFound
     }
 }
 

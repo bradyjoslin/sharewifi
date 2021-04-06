@@ -19,10 +19,14 @@ use crate::macos::*;
 
 use errors::AppResult;
 
-fn main() -> AppResult<()> {
+#[tokio::main]
+async fn main() -> AppResult<()> {
     let app = app::App::from_args();
     let ssid = match &app.ssid {
         Some(ssid_in) => ssid_in.to_owned(),
+        #[cfg(target_os = "windows")]
+        None => connected_ssid().await?,
+        #[cfg(target_os = "macos")]
         None => connected_ssid()?,
     };
     let password = get_password(&ssid)?;

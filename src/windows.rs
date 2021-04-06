@@ -1,24 +1,24 @@
+use crate::errors::{AppResult, Error};
+use bindings::windows::devices::wi_fi::*;
 use regex::Regex;
 use run_script::ScriptOptions;
 
-use crate::errors::{AppResult, Error};
+pub async fn connected_ssid() -> AppResult<String> {
+    let wifi_adapters = WiFiAdapter::find_all_adapters_async()?
+        .await?
+        .into_iter();
+    let mut ssid = "".into();
 
-pub fn connected_ssid() -> AppResult<String> {
-    let (_, output, _) = run_script::run_script!(
-        r#"
-            netsh wlan show interface
-        "#
-    )
-    .expect("Unable to get Wi-Fi info");
-
-    let re = Regex::new(r#"SSID\s+:\s(.*)"#).unwrap();
-
-    let ssid = re
-        .captures(&output)
-        .ok_or(Error::SsidMissing)?
-        .get(1)
-        .ok_or(Error::SsidMissing)?
-        .as_str();
+    for adapter in wifi_adapters {
+        let connection_profile = adapter
+            .network_adapter()?
+            .get_connected_profile_async()?
+            .await?
+            .wlan_connection_profile_details()?;
+        ssid = connection_profile
+            .get_connected_ssid()?
+            .to_string();
+    }
 
     if ssid.is_empty() {
         Err(Error::SsidMissing)
