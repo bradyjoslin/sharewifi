@@ -10,6 +10,4 @@ regex = "1.4.5"
 run_script = "0.7.0"
 structopt = "0.3"
 tokio = {version = "1.4", features = ["full"]}
-
-[target.windows]
 bindings = {path = "bindings"}
