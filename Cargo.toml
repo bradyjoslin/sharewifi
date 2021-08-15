@@ -7,5 +7,5 @@ version = "0.1.8"
 [dependencies]
 qrcode = {version = "0.12", default-features = false}
 structopt = "0.3"
-run_script = "0.7.0"
+run_script = "0.8.0"
 regex = "1.5.4"

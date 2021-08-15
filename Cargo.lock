@@ -246,9 +246,9 @@ checksum = "f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b"
 
 [[package]]
 name = "run_script"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e1c022176d696304ff6655716c2c09e1b888c00ac66a7c53c037ae7c9511ce6c"
+checksum = "7fa4becc694242c537d43695743701f362b43c42cb11a3d44c8a01eb0cd18ded"
 dependencies = [
  "fsio",
 ]
