@@ -73,6 +73,10 @@ To install:
 cargo install --path .
 ```
 
+### Limitations
+
+Please note that `sharewifi` is primarily designed for simpler Wi-Fi configurations. It does not support networks requiring 802.1X authentication (commonly used in enterprise environments that require both a username and password). Users behind such network configurations may encounter limitations when using this tool.
+
 ## Espanso Integration
 
 [Espanso](https://espanso.org/) is a free cross-platform text expander written in Rust. The [sharewifi espanso package](https://github.com/bradyjoslin/espanso-package-sharewifi/) makes `sharewifi` available via text expansion outside of the command line, including qr code rendering in plain text editors.
