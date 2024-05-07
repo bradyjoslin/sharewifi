@@ -1,3 +1,5 @@
+-- **Archived:  Apple has retired the airport command-line utility on macOS Sonoma 14.4** --
+
 # Share Wi-Fi Connection Info
 
 Quickly share Wi-Fi passwords and connection details. Generates QR codes that auto-configure iOS and Android devices. Compatible with macOS and Windows.
